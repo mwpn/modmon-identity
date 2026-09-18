@@ -18,6 +18,14 @@ Strategy D.
 | Laravel     | `^13.0`    |
 | Foundation  | `^1.0`     |
 
+Auth screens prefer Foundation Experience `GuestShell` when that
+component class is present. Because Blade compiles `<x-…>` tags even
+inside `@if` in the same template, Identity dispatches via
+`AuthLayoutResolver` to a dedicated GuestShell view or the v1.0.0 card
+layout — the unavailable component is never compiled on legacy
+Foundation ^1.0 hosts. Manifest stays `foundation: ^1.0` (Contract
+version cannot express commit `ed4b9b2`).
+
 ## Provides
 
 | Capability                | Description                                                       |
@@ -186,11 +194,14 @@ php artisan test --filter="Modules\\Identity"
 | Login / logout / password reset | ✓ |
 | Guest redirect portability (no host edit) | ✓ |
 | `identity:user:create` | ✓ |
+| Artisan framework commands preserved when Identity enabled | ✓ |
 | Disable / enable lifecycle | ✓ |
 | Portability proof (clean-host + suite) | ✓ |
+| GuestShell auth UX (`login` / forgot / reset) | ✓ |
 
 ## Version History
 
 | Version | Foundation | Description                                  |
 |---------|------------|----------------------------------------------|
+| 1.0.1   | ^1.0       | Console registration no longer eager-resolves ConsoleKernel (preserves `view:clear` / `optimize:clear` / …). Auth views use Foundation Experience GuestShell. |
 | 1.0.0   | ^1.0       | Phases 1–6 complete: portable Identity/Auth platform module (ownership, auth flows, lifecycle, clean-host portability proof). |

@@ -169,10 +169,14 @@ class IdentityBoundaryTest extends TestCase
             'bootstrap/app.php must not hardcode Identity login redirect',
         );
         $this->assertStringNotContainsString(
-            'redirectGuestsTo',
+            'Modules\\Identity',
             $bootstrap,
-            'Identity guest redirect must not require host redirectGuestsTo edits',
+            'bootstrap/app.php must not import or reference Identity',
         );
+
+        // A generic host redirectGuestsTo fallback (Foundation Experience)
+        // is allowed. Identity overrides via Authenticate::redirectUsing at
+        // runtime and must not require Identity-specific host edits.
     }
 
     public function test_host_routes_and_auth_config_are_not_identity_coupled(): void

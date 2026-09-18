@@ -143,7 +143,7 @@ class IdentityPortabilityTest extends TestCase
         $this->post(route('identity.login.submit'), [
             'email' => 'portable@example.com',
             'password' => 'secret-password',
-        ])->assertRedirect('/');
+        ])->assertRedirect(Route::has('dashboard') ? route('dashboard') : '/');
         $this->assertAuthenticatedAs($user);
 
         $this->assertTrue($manager->disable('identity')['success']);

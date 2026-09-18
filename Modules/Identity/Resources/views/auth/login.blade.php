@@ -1,12 +1,12 @@
 <x-identity::layouts.auth :title="__('Sign in')">
-    <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-1">{{ __('Sign in') }}</h2>
-    <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">{{ __('Sign in to your account to continue.') }}</p>
+    <h2 class="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">{{ __('Sign in') }}</h2>
+    <p class="mt-1.5 text-sm text-gray-500 dark:text-gray-400">{{ __('Sign in to your account to continue.') }}</p>
 
-    <form method="POST" action="{{ route('identity.login.submit') }}" class="space-y-4">
+    <form method="POST" action="{{ route('identity.login.submit') }}" class="mt-6 space-y-5">
         @csrf
 
         <div>
-            <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Email') }}</label>
+            <label for="email" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Email') }}</label>
             <input
                 id="email"
                 type="email"
@@ -15,35 +15,35 @@
                 required
                 autofocus
                 autocomplete="email"
-                class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm text-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                class="block w-full rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 text-sm text-gray-800 shadow-theme-xs transition placeholder:text-gray-400 focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/20 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:focus:border-brand-500"
             >
             @error('email')
-                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                <p class="mt-1.5 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
             @enderror
         </div>
 
         <div>
-            <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Password') }}</label>
+            <label for="password" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Password') }}</label>
             <input
                 id="password"
                 type="password"
                 name="password"
                 required
                 autocomplete="current-password"
-                class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm text-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                class="block w-full rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 text-sm text-gray-800 shadow-theme-xs transition placeholder:text-gray-400 focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/20 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:focus:border-brand-500"
             >
             @error('password')
-                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                <p class="mt-1.5 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
             @enderror
         </div>
 
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between gap-3">
             <label class="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                <input type="checkbox" name="remember" value="1" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-2">
+                <input type="checkbox" name="remember" value="1" class="mr-2 rounded border-gray-300 text-brand-500 focus:ring-brand-500 dark:border-gray-600 dark:bg-gray-900">
                 {{ __('Remember me') }}
             </label>
 
-            <a href="{{ route('identity.password.request') }}" class="text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400">
+            <a href="{{ route('identity.password.request') }}" class="text-sm font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400">
                 {{ __('Forgot your password?') }}
             </a>
         </div>

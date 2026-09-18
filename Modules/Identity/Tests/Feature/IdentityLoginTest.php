@@ -8,6 +8,7 @@ use App\Foundation\Runtime\ModuleManager;
 use App\Foundation\SDK\Contracts\CapabilityRegistryContract;
 use App\Foundation\SDK\Contracts\ModuleRegistrarContract;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Route;
 use Modules\Identity\Models\User;
 use Tests\TestCase;
 
@@ -55,6 +56,15 @@ class IdentityLoginTest extends TestCase
         ]);
     }
 
+    /**
+     * Mirrors LoginController::homeRoute() — dashboard when the host
+     * registers that named route, otherwise "/".
+     */
+    private function homeRoute(): string
+    {
+        return Route::has('dashboard') ? route('dashboard') : '/';
+    }
+
     public function test_login_form_renders(): void
     {
         $this->get(route('identity.login'))
@@ -83,7 +93,7 @@ class IdentityLoginTest extends TestCase
             'password' => 'secret-password',
         ]);
 
-        $response->assertRedirect('/');
+        $response->assertRedirect($this->homeRoute());
         $this->assertAuthenticated();
         $this->assertAuthenticatedAs(User::query()->where('email', 'user@example.com')->first());
         $this->assertNotSame(
@@ -118,7 +128,7 @@ class IdentityLoginTest extends TestCase
             'password' => 'secret-password',
         ]);
 
-        $response->assertRedirect('/');
+        $response->assertRedirect($this->homeRoute());
         $this->assertStringNotContainsString('://evil.', $response->headers->get('Location') ?? '');
     }
 

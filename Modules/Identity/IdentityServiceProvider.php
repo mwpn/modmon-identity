@@ -9,12 +9,14 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Contracts\Console\Kernel as ConsoleKernel;
 use Illuminate\Contracts\Http\Kernel as HttpKernel;
+use Illuminate\Foundation\Console\Kernel as FoundationConsoleKernel;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Support\ServiceProvider;
 use Modules\Identity\Console\Commands\CreateUserCommand;
 use Modules\Identity\Domain\Contracts\UserQueryContract;
 use Modules\Identity\Infrastructure\Queries\EloquentUserQuery;
 use Modules\Identity\Models\User;
+use ReflectionProperty;
 
 /**
  * Identity module service provider.
@@ -34,16 +36,28 @@ class IdentityServiceProvider extends ServiceProvider implements ContributesRout
         $this->loadViewsFrom(__DIR__.'/Resources/views', 'identity');
 
         if ($this->app->runningInConsole()) {
+            // Cold Artisan start: queue until Console Kernel constructs its
+            // Artisan map (after deferred providers register their own
+            // starting listeners). Never eager-resolve ConsoleKernel /
+            // getArtisan() during BootProviders — that silently drops
+            // framework commands such as view:clear / migrate.
             $this->commands([
                 CreateUserCommand::class,
             ]);
 
-            // Artisan may already have started when the module is
-            // installed/enabled at runtime (or in tests), so the
-            // commands() "starting" listener never fires. Register the
-            // command on the already-resolved console kernel directly.
-            $this->app->make(ConsoleKernel::class)
-                ->registerCommand($this->app->make(CreateUserCommand::class));
+            // Mid-process module:install / module:enable: Artisan may
+            // already be running, so Artisan::starting() alone will not
+            // attach the command. Register only when Artisan is already
+            // constructed — never create it here.
+            $this->app->afterResolving(ConsoleKernel::class, function (ConsoleKernel $kernel): void {
+                $this->registerCreateUserCommandIfArtisanAlreadyStarted($kernel);
+            });
+
+            if ($this->app->resolved(ConsoleKernel::class)) {
+                $this->registerCreateUserCommandIfArtisanAlreadyStarted(
+                    $this->app->make(ConsoleKernel::class),
+                );
+            }
         }
 
         $this->wireAuthModel();
@@ -53,6 +67,33 @@ class IdentityServiceProvider extends ServiceProvider implements ContributesRout
     public function boot(): void
     {
         //
+    }
+
+    /**
+     * Attach identity:user:create only when the console Kernel already
+     * owns a constructed Artisan application (mid-process enable/install).
+     *
+     * Calling Kernel::registerCommand() while Artisan is still null
+     * constructs Artisan early and drops deferred framework commands.
+     */
+    private function registerCreateUserCommandIfArtisanAlreadyStarted(ConsoleKernel $kernel): void
+    {
+        if (! $this->consoleKernelHasStartedArtisan($kernel)) {
+            return;
+        }
+
+        $kernel->registerCommand($this->app->make(CreateUserCommand::class));
+    }
+
+    private function consoleKernelHasStartedArtisan(ConsoleKernel $kernel): bool
+    {
+        if (! $kernel instanceof FoundationConsoleKernel) {
+            return false;
+        }
+
+        $property = new ReflectionProperty(FoundationConsoleKernel::class, 'artisan');
+
+        return $property->getValue($kernel) !== null;
     }
 
     /**

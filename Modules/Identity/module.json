@@ -2,7 +2,7 @@
     "schema": 1,
     "name": "Identity",
     "code": "identity",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "type": "platform",
     "provider": "Modules\\Identity\\IdentityServiceProvider",
     "compatibility": {

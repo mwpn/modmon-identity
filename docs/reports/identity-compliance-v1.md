@@ -1,13 +1,23 @@
 # Identity Module Compliance Report
 
 **Module:** Identity (`modmon-identity`)  
-**Version:** 1.0.0  
+**Version:** 1.0.1 (stabilization patch; original certification 1.0.0)  
 **Standard:** Module Authoring Standard v1 §18 (Portable Module Definition of Done)  
 **Proposal:** `docs/proposals/identity-v1.md` (Approved 2026-08-12)  
 **ADR:** ADR-0006 (Strategy D; amendment 2026-08-12 — runtime auth wiring)  
-**Date:** 2026-08-13  
+**Date:** 2026-09-18 (v1.0.1); original proof 2026-08-13  
 **Host under proof:** Compatible ModMon Foundation (main + accepted Foundation
 runtime fixes), clean of `Modules/Identity`, then Identity copied in only.
+
+## v1.0.1 Stabilization (2026-09-18)
+
+| Track | Change | Notes |
+|-------|--------|-------|
+| A — Console registration | Removed eager `make(ConsoleKernel)->registerCommand()` during provider `register()` | Root cause of missing `view:clear` / `optimize:clear` / … when Identity enabled at boot (DKM reproduction). Cold boot uses `$this->commands()` only; mid-process install/enable registers only if Artisan is already constructed. |
+| B — GuestShell auth UX | `AuthLayoutResolver` `@include`s `auth-guest` or `auth-legacy`; dispatcher never embeds `foundation::guest-shell` | Blade compiles component tags even inside `@if` in one file — split views required for real legacy ^1.0 fallback. |
+| Compatibility | `foundation: ^1.0` unchanged | Outcome C: backward-compatible auth shell detection. No Foundation Contract bump for styling-only Experience component. |
+| Rejected | ModMon host PHP drifts (migration, contracts, read models, validators, unrelated tests) | Not ported. |
+| Tests | `IdentityArtisanCommandsPreservedTest` + existing suite | Framework commands preserved; Identity command lifecycle; GuestShell when available. |
 
 ## Portability Procedure Executed
 
@@ -59,7 +69,7 @@ Exact clean-host sequence (no unrelated host source edits):
 |-------|--------|-------|
 | `module.json` exists and passes ManifestValidator | **PASS** | Schema 1; verified by `module:doctor` + `IdentityManifestTest`. |
 | Module code follows naming convention | **PASS** | `identity` matches `^[a-z][a-z0-9\-]*$`. |
-| Semantic version is valid | **PASS** | `1.0.0`. |
+| Semantic version is valid | **PASS** | `1.0.1` (was `1.0.0` at original certification). |
 | Module type is valid | **PASS** | `platform`. |
 | Provider FQCN is valid and class exists | **PASS** | `Modules\Identity\IdentityServiceProvider`. |
 | Compatibility constraints declared | **PASS** | PHP `^8.3`, Laravel `^13.0`, Foundation `^1.0`. |
@@ -162,8 +172,9 @@ No Identity feature gaps and no Foundation redesign were required to complete th
 
 ## Decision
 
-**`modmon-identity` v1 is portable and compliant** with the Module
-Authoring Standard v1 Portable Module Definition of Done.
+**`modmon-identity` v1.0.1 is portable and compliant** with the Module
+Authoring Standard v1 Portable Module Definition of Done, and closes the
+console-registration + GuestShell auth UX stabilization items.
 
 Certified workflow proven:
 
