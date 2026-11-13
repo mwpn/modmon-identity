@@ -40,7 +40,7 @@ class IdentityPortabilityTest extends TestCase
     {
         parent::setUp();
 
-        $this->modulesJsonPath = storage_path('app/modules.json');
+        $this->modulesJsonPath = storage_path('framework/testing/modules.json');
         if (file_exists($this->modulesJsonPath)) {
             unlink($this->modulesJsonPath);
         }
