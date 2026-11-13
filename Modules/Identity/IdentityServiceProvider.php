@@ -12,7 +12,9 @@ use Illuminate\Contracts\Http\Kernel as HttpKernel;
 use Illuminate\Foundation\Console\Kernel as FoundationConsoleKernel;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Support\ServiceProvider;
+use Modules\Identity\Application\Services\StaffUserService;
 use Modules\Identity\Console\Commands\CreateUserCommand;
+use Modules\Identity\Domain\Contracts\UserManagementContract;
 use Modules\Identity\Domain\Contracts\UserQueryContract;
 use Modules\Identity\Infrastructure\Queries\EloquentUserQuery;
 use Modules\Identity\Models\User;
@@ -23,12 +25,19 @@ use ReflectionProperty;
  *
  * Phase 1-3: runtime auth-provider wiring and UserQueryContract binding.
  * Phase 4: auth flow routes, views, and the identity:user:create command.
+ *
+ * Identity deliberately contributes no permissions, navigation, or
+ * dashboard widgets (enforced by IdentityBoundaryTest) — it must install
+ * standalone, below RBAC in the platform chain, with no authorization
+ * concept of its own. A permission-gated staff-management UI consumes
+ * `UserManagementContract` from RBAC instead (ADR-0042).
  */
 class IdentityServiceProvider extends ServiceProvider implements ContributesRoutes
 {
     public function register(): void
     {
         $this->app->singleton(UserQueryContract::class, EloquentUserQuery::class);
+        $this->app->singleton(UserManagementContract::class, StaffUserService::class);
 
         // Called from register() (not boot()) because the Foundation boots
         // module providers after the application has already booted, and

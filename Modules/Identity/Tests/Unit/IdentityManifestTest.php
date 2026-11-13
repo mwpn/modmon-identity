@@ -31,7 +31,7 @@ class IdentityManifestTest extends TestCase
 
         $this->assertSame('Identity', $data['name']);
         $this->assertSame('identity', $data['code']);
-        $this->assertSame('1.0.1', $data['version']);
+        $this->assertSame('1.1.0', $data['version']);
         $this->assertSame('platform', $data['type']);
         $this->assertSame('Modules\\Identity\\IdentityServiceProvider', $data['provider']);
     }

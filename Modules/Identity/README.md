@@ -107,8 +107,13 @@ Requires modmon-settings (not yet available in Foundation v1).
 
 ## Permissions
 
-*None* — Identity v1 declares no permissions. RBAC (future) will consume
-permissions through the module-agnostic Foundation `PermissionRegistry`.
+*None* — Identity declares no permissions, navigation, or dashboard
+widgets by design (enforced by `IdentityBoundaryTest`): it must install
+standalone, below RBAC in the platform chain, with no authorization
+concept of its own. A permission-gated staff-user management UI
+consumes `UserManagementContract` from RBAC instead (ADR-0042). RBAC
+consumes permissions through the module-agnostic Foundation
+`PermissionRegistry`.
 
 ## Routes
 
@@ -141,6 +146,7 @@ back to Laravel's default and never depends on `identity.login`.
 | Contract                                            | Description                                           |
 |-----------------------------------------------------|-------------------------------------------------------|
 | `Modules\Identity\Domain\Contracts\UserQueryContract` | Read-only user lookup for RBAC/Tenancy/Subscription without importing Identity internals. |
+| `Modules\Identity\Domain\Contracts\UserManagementContract` | Write-side: `all()`/`find()`/`create()`/`update()`/`delete()`. Added for RBAC's staff-user management screen (ADR-0042) — kept separate from the read-only `UserQueryContract` rather than widening it. |
 
 Consumers use `UserReadModel` (immutable DTO). No Eloquent model,
 password, or token crosses the module boundary.
@@ -194,6 +200,7 @@ php artisan test --filter="Modules\\Identity"
 | Login / logout / password reset | ✓ |
 | Guest redirect portability (no host edit) | ✓ |
 | `identity:user:create` | ✓ |
+| `UserManagementContract` (create/update/delete, duplicate-email + short-password validation, missing-user errors) | ✓ (`UserManagementContractTest`) |
 | Artisan framework commands preserved when Identity enabled | ✓ |
 | Disable / enable lifecycle | ✓ |
 | Portability proof (clean-host + suite) | ✓ |
@@ -203,5 +210,6 @@ php artisan test --filter="Modules\\Identity"
 
 | Version | Foundation | Description                                  |
 |---------|------------|----------------------------------------------|
+| 1.1.0   | ^1.0       | New `UserManagementContract` (write-side: create/update/delete), consumed by RBAC's new staff-user management screen (ADR-0042). `UserQueryContract` stays unchanged and read-only; Identity still contributes no permissions/navigation/UI of its own. |
 | 1.0.1   | ^1.0       | Console registration no longer eager-resolves ConsoleKernel (preserves `view:clear` / `optimize:clear` / …). Auth views use Foundation Experience GuestShell. |
 | 1.0.0   | ^1.0       | Phases 1–6 complete: portable Identity/Auth platform module (ownership, auth flows, lifecycle, clean-host portability proof). |
