@@ -1,7 +1,7 @@
-<x-identity::layouts.auth :title="__('Reset password')">
-    <h2 class="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">{{ __('Reset your password') }}</h2>
+<x-identity::layouts.auth title="Atur Ulang Kata Sandi">
+    <h2 class="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">Atur ulang kata sandi</h2>
     <p class="mt-1.5 text-sm text-gray-500 dark:text-gray-400">
-        {{ __('Choose a new password for your account.') }}
+        Pilih kata sandi baru untuk akun Anda.
     </p>
 
     <form method="POST" action="{{ route('identity.password.update') }}" class="mt-6 space-y-5">
@@ -10,7 +10,7 @@
         <input type="hidden" name="token" value="{{ $token }}">
 
         <div>
-            <label for="email" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Email') }}</label>
+            <label for="email" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
             <input
                 id="email"
                 type="email"
@@ -26,7 +26,7 @@
         </div>
 
         <div>
-            <label for="password" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('New Password') }}</label>
+            <label for="password" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">Kata Sandi Baru</label>
             <input
                 id="password"
                 type="password"
@@ -41,7 +41,7 @@
         </div>
 
         <div>
-            <label for="password_confirmation" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Confirm Password') }}</label>
+            <label for="password_confirmation" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">Ulangi Kata Sandi Baru</label>
             <input
                 id="password_confirmation"
                 type="password"
@@ -53,7 +53,7 @@
         </div>
 
         <x-foundation::button type="primary" tag="button" class="w-full">
-            {{ __('Reset Password') }}
+            Atur Ulang Kata Sandi
         </x-foundation::button>
     </form>
 </x-identity::layouts.auth>

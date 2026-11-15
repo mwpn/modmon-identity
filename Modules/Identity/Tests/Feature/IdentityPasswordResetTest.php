@@ -65,7 +65,7 @@ class IdentityPasswordResetTest extends TestCase
     {
         $this->get(route('identity.password.request'))
             ->assertOk()
-            ->assertSee('Forgot your password?');
+            ->assertSee('Lupa kata sandi?');
     }
 
     public function test_send_reset_link_sends_notification_with_identity_url(): void
@@ -109,7 +109,7 @@ class IdentityPasswordResetTest extends TestCase
     {
         $this->get(route('identity.password.reset', ['token' => 'fake-token']))
             ->assertOk()
-            ->assertSee('Reset your password');
+            ->assertSee('Atur ulang kata sandi');
     }
 
     public function test_reset_password_updates_hash(): void

@@ -69,7 +69,7 @@ class IdentityLoginTest extends TestCase
     {
         $this->get(route('identity.login'))
             ->assertOk()
-            ->assertSee('Sign in');
+            ->assertSee('Masuk');
     }
 
     public function test_guest_redirect_works_on_normal_boot_path(): void

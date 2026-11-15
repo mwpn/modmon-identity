@@ -130,10 +130,10 @@ class IdentityArtisanCommandsPreservedTest extends TestCase
         $response = $this->get(route('identity.login'));
 
         $response->assertOk();
-        $response->assertSee('Sign in', false);
+        $response->assertSee('Masuk', false);
 
         if (class_exists(\App\Foundation\Experience\Components\GuestShell::class)) {
-            $response->assertSee('Back to home', false);
+            $response->assertSee('Kembali ke beranda', false);
         } else {
             $response->assertSee(config('app.name', 'ModMon'), false);
         }

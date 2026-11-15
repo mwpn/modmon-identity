@@ -93,7 +93,7 @@ class IdentityAuthLayoutFallbackTest extends TestCase
             $response = $this->get($uri);
 
             $response->assertOk();
-            $response->assertDontSee('Back to home', false);
+            $response->assertDontSee('Kembali ke beranda', false);
             $response->assertSee(config('app.name', 'ModMon'), false);
             $response->assertSee('&copy; '.date('Y'), false);
         }
@@ -120,11 +120,11 @@ class IdentityAuthLayoutFallbackTest extends TestCase
 
         $this->get(route('identity.login'))
             ->assertOk()
-            ->assertSee('Back to home', false)
-            ->assertSee('Sign in', false);
+            ->assertSee('Kembali ke beranda', false)
+            ->assertSee('Masuk', false);
 
         $this->get(route('identity.password.request'))
             ->assertOk()
-            ->assertSee('Back to home', false);
+            ->assertSee('Kembali ke beranda', false);
     }
 }

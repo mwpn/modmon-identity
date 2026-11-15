@@ -1,14 +1,14 @@
-<x-identity::layouts.auth :title="__('Forgot password')">
-    <h2 class="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">{{ __('Forgot your password?') }}</h2>
+<x-identity::layouts.auth title="Lupa Kata Sandi">
+    <h2 class="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">Lupa kata sandi?</h2>
     <p class="mt-1.5 text-sm leading-relaxed text-gray-500 dark:text-gray-400">
-        {{ __('No problem. Just let us know your email address and we will email you a password reset link.') }}
+        Tidak masalah. Masukkan alamat email Anda dan kami akan mengirimkan tautan untuk mengatur ulang kata sandi.
     </p>
 
     <form method="POST" action="{{ route('identity.password.email') }}" class="mt-6 space-y-5">
         @csrf
 
         <div>
-            <label for="email" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Email') }}</label>
+            <label for="email" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
             <input
                 id="email"
                 type="email"
@@ -25,13 +25,13 @@
         </div>
 
         <x-foundation::button type="primary" tag="button" class="w-full">
-            {{ __('Email Password Reset Link') }}
+            Kirim Tautan Reset Kata Sandi
         </x-foundation::button>
     </form>
 
     <p class="mt-5 text-center text-sm">
         <a href="{{ route('identity.login') }}" class="font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400">
-            {{ __('Back to sign in') }}
+            Kembali ke halaman masuk
         </a>
     </p>
 </x-identity::layouts.auth>
